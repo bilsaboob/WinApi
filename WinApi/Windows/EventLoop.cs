@@ -22,7 +22,7 @@ namespace WinApi.Windows
         {
             Action destroyHandler = () => { MessageHelpers.PostQuitMessage(); };
             if (mainWindow != null) mainWindow.Destroyed += destroyHandler;
-            var res = this.RunCore();
+            var res = this.RunCore(mainWindow);
             // Technically, this can be avoided by setting the handler to auto disconnect.
             // However, this helps keep the mainWindow alive, and use this instead of 
             // GC.KeepAlive pattern.
@@ -30,7 +30,7 @@ namespace WinApi.Windows
             return res;
         }
 
-        public abstract int RunCore();
+        public abstract int RunCore(NativeWindow mainWindow);
     }
 
 
@@ -38,7 +38,7 @@ namespace WinApi.Windows
     {
         public EventLoop(object state = null) : base(state) {}
 
-        public override int RunCore()
+        public override int RunCore(NativeWindow mainWindow)
         {
             Message msg;
             int res;
@@ -55,16 +55,17 @@ namespace WinApi.Windows
     {
         public RealtimeEventLoop(object state = null) : base(state) {}
 
-        public override int RunCore()
+        public override int RunCore(NativeWindow mainWindow)
         {
             Message msg;
             var quitMsgId = (uint) WM.QUIT;
             do
             {
-                if (User32Helpers.PeekMessage(out msg, IntPtr.Zero, 0, 0, PeekMessageFlags.PM_REMOVE))
-                {
+                if (User32Helpers.PeekMessage(out msg, IntPtr.Zero, 0, 0, PeekMessageFlags.PM_REMOVE)) {
                     User32Methods.TranslateMessage(ref msg);
                     User32Methods.DispatchMessage(ref msg);
+                } else {
+                    User32Methods.InvalidateRect(mainWindow.Handle, IntPtr.Zero, false);
                 }
             } while (msg.Value != quitMsgId);
             return 0;
@@ -83,7 +84,7 @@ namespace WinApi.Windows
     {
         protected InterceptableEventLoopBase(object state) : base(state) {}
 
-        public override int RunCore()
+        public override int RunCore(NativeWindow mainWindow)
         {
             Message msg;
             int res;
@@ -104,7 +105,7 @@ namespace WinApi.Windows
     {
         protected InterceptableRealtimeEventLoopBase(object state) : base(state) {}
 
-        public override int RunCore()
+        public override int RunCore(NativeWindow mainWindow)
         {
             Message msg;
             var quitMsg = (uint) WM.QUIT;
