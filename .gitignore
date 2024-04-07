@@ -196,3 +196,9 @@ _Pvt_Extensions/
 ModelManifest.xml
 
 .idea/
+
+WinApi/generated/
+WinApi.Desktop/generated/
+WinApi.DxUtils/generated/
+WinApi.Utils/generated/
+WinApi.Windows.Controls/generated/
