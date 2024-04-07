@@ -288,4 +288,44 @@ namespace WinApi.User32
         public ElementSystemStates HelpButtonStates;
         public ElementSystemStates CloseButtonStates;
     }
+
+    public enum HighDpiMode
+    {
+      INVALID = -1,
+
+      /// <summary>
+      ///  The window does not scale for DPI changes and always assumes a scale factor of 100%.
+      /// </summary>
+      UNAWARE = 0,
+
+      /// <summary>
+      ///  The window queries for the DPI of the primary monitor once and uses this for the application on all monitors.
+      /// </summary>
+      SYSTEM_AWARE = 1,
+
+      /// <summary>
+      ///  The window checks for DPI when it's created and adjusts scale factor when the DPI changes.
+      /// </summary>
+      PER_MONITOR_AWARE = 2,
+
+      /// <summary>
+      ///  Similar to <see cref="PerMonitor"/>, but enables child window DPI change notification, improved scaling of comctl32 controls and dialog scaling.
+      /// </summary>
+      PER_MONITOR_AWARE2 = 3,
+
+      /// <summary>
+      ///  Similar to <see cref="DpiUnaware"/>, but improves the quality of GDI/GDI+ based content.
+      /// </summary>
+      UNAWARE_GDI_SCALED = 4
+    }
+
+    public static class DPI_AWARENESS_CONTEXT
+    {
+      public static IntPtr UNSPECIFIED_DPI_AWARENESS_CONTEXT = IntPtr.Zero;
+      public static readonly IntPtr UNAWARE = (IntPtr)(-1);
+      public static readonly IntPtr SYSTEM_AWARE = (IntPtr)(-2);
+      public static readonly IntPtr PER_MONITOR_AWARE = (IntPtr)(-3);
+      public static readonly IntPtr PER_MONITOR_AWARE_V2 = (IntPtr)(-4);
+      public static readonly IntPtr UNAWARE_GDISCALED = (IntPtr)(-5);
+    }
 }

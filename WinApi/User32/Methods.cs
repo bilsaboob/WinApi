@@ -155,6 +155,15 @@ namespace WinApi.User32
         public static extern bool SetLayeredWindowAttributes(IntPtr hwnd, uint crKey, byte bAlpha,
             LayeredWindowAttributeFlag dwFlags);
 
+        [DllImport(LibraryName, ExactSpelling = true)]
+        public static extern bool IsValidDpiAwarenessContext(IntPtr value);
+
+        [DllImport(LibraryName, ExactSpelling = true)]
+        public static extern bool SetProcessDPIAware();
+
+        [DllImport(LibraryName, ExactSpelling = true)]
+        public static extern bool SetProcessDpiAwarenessContext(IntPtr value);
+
         [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
         public static extern bool WinHelp(IntPtr hWndMain, string lpszHelp, uint uCommand, uint dwData);
 

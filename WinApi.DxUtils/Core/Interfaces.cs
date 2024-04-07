@@ -54,6 +54,7 @@ namespace WinApi.DxUtils.Core
         SharpDX.Direct3D11.Device Device { get; }
         SharpDX.Direct3D11.DeviceContext Context { get; }
         SharpDX.Direct3D11.RenderTargetView RenderTargetView { get; }
+        SharpDX.Direct3D11.DepthStencilView DepthStencilView { get; }
     }
 
     // ReSharper disable once InconsistentNaming

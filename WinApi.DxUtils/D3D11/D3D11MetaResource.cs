@@ -20,6 +20,8 @@ namespace WinApi.DxUtils.D3D11
         private Factory2 m_dxgiFactory;
         private bool m_isDisposed;
         private RenderTargetView m_renderTargetView;
+        private DepthStencilView m_depthStencilView;
+        private Texture2D m_depthStencilTexture;
         private SwapChain1 m_swapChain;
 
         public D3D11MetaResource(D3D11MetaResourceOptions creationOpts)
@@ -61,6 +63,17 @@ namespace WinApi.DxUtils.D3D11
             get { return this.m_renderTargetView; }
             protected set { this.m_renderTargetView = value; }
         }
+        
+        public override DepthStencilView DepthStencilView
+        {
+            get { return this.m_depthStencilView; }
+            protected set { this.m_depthStencilView = value; }
+        }
+
+        public override Texture2D DepthStencilTexture {
+            get { return this.m_depthStencilTexture; }
+            protected set { this.m_depthStencilTexture = value; }
+        }
 
         public override Adapter Adapter { get { return this.m_adapter; } protected set { this.m_adapter = value; } }
 
@@ -96,9 +109,14 @@ namespace WinApi.DxUtils.D3D11
             {
                 this.DisconnectLinkedResources();
                 this.DisconnectRenderTargetView();
+
                 DisposableHelpers.DisposeAndSetNull(ref this.m_renderTargetView);
+                DisposableHelpers.DisposeAndSetNull(ref this.m_depthStencilTexture);
+                DisposableHelpers.DisposeAndSetNull(ref this.m_depthStencilView);
+                
                 // Resize retaining other properties.
                 this.SwapChain1?.ResizeBuffers(0, this.Size.Width, this.Size.Height, Format.Unknown, SwapChainFlags.None);
+
                 this.ConnectRenderTargetView();
                 this.ConnectLinkedResources();
             }
@@ -113,6 +131,8 @@ namespace WinApi.DxUtils.D3D11
         {
             this.DisconnectLinkedResources();
             DisposableHelpers.DisposeAndSetNull(ref this.m_renderTargetView);
+            DisposableHelpers.DisposeAndSetNull(ref this.m_depthStencilView);
+            DisposableHelpers.DisposeAndSetNull(ref this.m_depthStencilTexture);
             DisposableHelpers.DisposeAndSetNull(ref this.m_swapChain);
             DisposableHelpers.DisposeAndSetNull(ref this.m_context);
             DisposableHelpers.DisposeAndSetNull(ref this.m_dxgiFactory);

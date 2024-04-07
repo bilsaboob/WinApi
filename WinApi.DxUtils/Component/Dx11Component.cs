@@ -48,13 +48,16 @@ namespace WinApi.DxUtils.Component
             this.InitializeInternal();
         }
 
-        public void EnsureInitialized()
+        public bool EnsureInitialized()
         {
             if (!this.IsInitialized)
             {
                 this.Create();
                 this.InitializeInternal();
+                return true;
             }
+
+            return false;
         }
 
         public void Resize(Size size)
@@ -67,10 +70,9 @@ namespace WinApi.DxUtils.Component
         private void InitializeInternal()
         {
             this.m_d3D.Initialize(this.Hwnd, this.Size);
-            this.m_d2D.Initialize(this.m_d3D);
+            // this.m_d2D.Initialize(this.m_d3D);
             if (this.m_compVariant > 0)
-                this.Compositor.Initialize(this.m_d3D,
-                    new WindowCompositorOptions(this.Hwnd));
+                this.Compositor.Initialize(this.m_d3D, new WindowCompositorOptions(this.Hwnd));
         }
 
         private void Create()
@@ -79,8 +81,8 @@ namespace WinApi.DxUtils.Component
             this.m_d3D = this.m_compVariant > 0
                 ? D3D11MetaFactory.CreateForComposition(creationFlags: d3dCreationFlags)
                 : D3D11MetaFactory.CreateForWindowTarget(creationFlags: d3dCreationFlags);
-            this.m_d2D = D2D1MetaFactory.CreateForSwapChain();
-            this.m_dWriteFactory = new Factory(FactoryType.Shared);
+            // this.m_d2D = D2D1MetaFactory.CreateForSwapChain();
+            // this.m_dWriteFactory = new Factory(FactoryType.Shared);
             this.Compositor = new WindowSwapChainCompositor(this.m_compVariant);
         }
 
@@ -98,8 +100,8 @@ namespace WinApi.DxUtils.Component
         public void Destroy()
         {
             this.Compositor?.Destroy();
-            this.m_d2D.Destroy();
-            this.m_d3D.Destroy();
+            this.m_d2D?.Destroy();
+            this.m_d3D?.Destroy();
         }
     }
 }
